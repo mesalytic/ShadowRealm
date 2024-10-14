@@ -29,6 +29,7 @@ dependencies {
     implementation("net.dv8tion:JDA:5.1.2")
     implementation("io.github.cdimascio:dotenv-java:3.0.0")
     implementation("ch.qos.logback:logback-classic:1.5.6")
+    implementation("org.reflections:reflections:0.10.2")
 }
 
 application {
@@ -40,6 +41,17 @@ tasks {
         archiveClassifier.set("")
     }
 }
+
+tasks.named<JavaExec>("run") {
+    doFirst {
+        // Gradle doesn't like -Pdev=true -Ddev=true
+        // need to pass it through task directly
+        if (project.hasProperty("dev")) {
+            jvmArgs("-Ddev=${project.property("dev")}")
+        }
+    }
+}
+
 
 
 tasks.test {
